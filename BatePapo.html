@@ -6,13 +6,50 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BatePapo UOL</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/app.css">
 </head>
 
 <body>
-    <button class="clearInterval">clearInterval()</button>
+    <header>
+        <div class="navbar">
+            <img class="logo" src="imgs/logo.png" alt="Logo Bate Papo UOL" srcset="">
+            <ion-icon class='people' name="people"></ion-icon>
+        </div>
+    </header>
+    <ul class="feed">
+    </ul>
+
+    <div class="footer">
+        <div>
+            <input type="text" class="message" placeholder="Escreva aqui...">
+            <span class="hidden"></span>
+        </div>
+        <ion-icon name="paper-plane-outline"></ion-icon>
+    </div>
+
+    <aside class="sidebar hidden">
+        <p><strong>Escolha um contato para enviar mensagem:</strong></p>
+        <ul class="contacts"></ul>
+        <p><strong>Escolha a visibilidade:</strong> </p>
+        <p>
+            <ion-icon name="lock-open"></ion-icon> Público
+        </p>
+        <p>
+            <ion-icon name="lock-closed"></ion-icon> Privado
+        </p>
+    </aside>
+    <div class="dark-background hidden"></div>
+
+
+    <button class="clearInterval hidden">clearInterval()</button>
+
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="index.js"></script>
+    <script src="js/index.js"></script>
+    <script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
 </body>
 
 </html>
