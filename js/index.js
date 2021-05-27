@@ -145,17 +145,36 @@ function fillContacts(users) {
             </li>
     `
 
-    for (let i = 0; i < users.length; i++) {
+    for (user in users) {
         contactList.innerHTML += `
             <li class="user" onclick="selectUser(this)">
                 <div>
                     <ion-icon name="person-circle"></ion-icon>
-                    <span>${users[i].name}</span>
+                    <span>${user.name}</span>
                 </div>
                 <ion-icon name="checkmark-outline" class="hidden"></ion-icon>
             </li>
         `
     }
+}
+
+function selectUser(elem) {
+    const children = elem.childNodes;
+    const check = children[3];
+
+    const parent = elem.parentNode;
+    const list = parent.children;
+
+    for (let i = 0; i < list.length; i++) {
+        const checkmark = list[i].lastElementChild;
+        if (!checkmark.classList.contains('hidden')) {
+            checkmark.classList.add('hidden');
+        }
+    }
+    check.classList.remove('hidden');
+
+    contactSelected = elem.children[0].children[1].innerHTML;
+    console.log(contactSelected);
 }
 
 
