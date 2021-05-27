@@ -1,0 +1,23 @@
+{
+  "name": "batepapouol",
+  "version": "1.0.0",
+  "description": "Projeto 05 - Bootcamp Responde Aí utilizando Node e Axios",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JPVercosa/BatePapoUOL.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JPVercosa/BatePapoUOL/issues"
+  },
+  "homepage": "https://github.com/JPVercosa/BatePapoUOL#readme",
+  "dependencies": {
+    "axios": "^0.21.1"
+  }
+}
