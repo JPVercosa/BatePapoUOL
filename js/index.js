@@ -4,6 +4,15 @@ const clearIntervalBttn = document.querySelector('.clearInterval')
 const sideBarBttn = document.querySelector('ion-icon.people')
 const sideBar = document.querySelector('.sidebar')
 const darkBG = document.querySelector('.dark-background')
+const sendBttn = document.querySelector('.sendBttn')
+
+let contactSelected = 'todos'
+let messageTypeSelected = 'message'
+
+sendBttn.addEventListener('click', () => {
+    const inputElem = document.querySelector('.message')
+    sendMessage(nome, contactSelected, inputElem.value, messageTypeSelected)
+})
 
 sideBarBttn.addEventListener('click', () => {
     sideBar.classList.toggle('hidden')
@@ -78,8 +87,8 @@ const sendMessage = async (from, to, text, type) => {
 
 const searchParticipants = async () => {
     try {
-        const res = await axios.get(baseUrl + "participants", data);
-
+        const res = await axios.get(baseUrl + "participants");
+        fillContacts(res.data)
     } catch (error) {
         console.log("Error function searchParticipants")
         console.log(error)
@@ -123,6 +132,32 @@ function fillFeed(feed) {
     }
 }
 
+function fillContacts(users) {
+    const contactList = document.querySelector(".contacts");
+
+    contactList.innerHTML = `
+            <li class="user" onclick="selectUser(this)">
+                <div>
+                    <ion-icon name="people"></ion-icon>
+                    <span>Todos</span>
+                </div>
+                <ion-icon name="checkmark-outline" class="hidden"></ion-icon>
+            </li>
+    `
+
+    for (let i = 0; i < users.length; i++) {
+        contactList.innerHTML += `
+            <li class="user" onclick="selectUser(this)">
+                <div>
+                    <ion-icon name="person-circle"></ion-icon>
+                    <span>${users[i].name}</span>
+                </div>
+                <ion-icon name="checkmark-outline" class="hidden"></ion-icon>
+            </li>
+        `
+    }
+}
+
 
 
 const nome = prompt("Insira seu nome:", `userID${Math.floor(1 + Math.random() * 10)}`);
@@ -130,5 +165,8 @@ const nome = prompt("Insira seu nome:", `userID${Math.floor(1 + Math.random() * 
 connectRoom(nome);
 getMessages();
 //sendMessage(nome, 'todos', 'Minha primeira mensagem', 'message');
-const onlineInterval = setInterval(isOnline, 5000, nome);
-const refreshFeedInterval = setInterval(getMessages, 3000);
+//const onlineInterval = setInterval(isOnline, 5000, nome);
+//const refreshFeedInterval = setInterval(getMessages, 3000);
+searchParticipants()
+const refreshUsers = setInterval(searchParticipants, 10000)
+
