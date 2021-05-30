@@ -26,18 +26,11 @@ darkBG.addEventListener('click', () => {
 
 })
 
-clearIntervalBttn.addEventListener('click', () => {
-    clearInterval(onlineInterval);
-    clearInterval(refreshFeedInterval);
-    console.log('Teste');
-})
-
-
 const connectRoom = async (nome) => {
     const data = { 'name': nome };
     try {
         const res = await axios.post(baseUrl + "participants", data);
-        console.dir(res.data);
+        console.log(`${nome} conectado!`)
     } catch (error) {
         console.log("Error function connectRoom.")
         if (error.response.status === 400) {
@@ -50,12 +43,15 @@ const connectRoom = async (nome) => {
 }
 
 const isOnline = async (nome) => {
-    const data = { 'name': nome };
-    try {
-        const res = await axios.post(baseUrl + "status", data);
-    } catch (error) {
-        console.log("Error function isOnline.")
-        console.log(error);
+    if (nome) {
+        const data = { 'name': nome };
+        try {
+            const res = await axios.post(baseUrl + "status", data);
+            console.log(`${nome} está online!`)
+        } catch (error) {
+            console.log("Error function isOnline." + data.name)
+            console.log(error);
+        }
     }
 }
 
@@ -69,15 +65,17 @@ const getMessages = async () => {
     }
 }
 
-const sendMessage = async (from, to, text, type) => {
+const sendMessage = async () => {
+    const msg = document.querySelector('.message')
     const data = {
-        'from': from,
-        'to': to,
-        'text': text,
-        'type': type
+        'from': nome,
+        'to': contactSelected,
+        'text': msg.value,
+        'type': (messageTypeSelected === "Privado" ? "private_message" : "message")
     }
     try {
         const res = await axios.post(baseUrl + "messages", data);
+        getMessages();
 
     } catch (error) {
         console.log("Error function sendMessage")
@@ -117,7 +115,7 @@ function fillFeed(feed) {
             </li>
             `
         }
-        if (feed[i].type === "private_message" && (feed[i].to === enter_room.name || feed[i].to === "Todos")) {
+        if (feed[i].type === "private_message" && (feed[i].to === nome || feed[i].to === "Todos")) {
             container.innerHTML += `
             <li class="private">
                 <p>
@@ -137,44 +135,59 @@ function fillContacts(users) {
 
     contactList.innerHTML = `
             <li class="user" onclick="selectUser(this)">
-                <div>
+                <p>
                     <ion-icon name="people"></ion-icon>
                     <span>Todos</span>
-                </div>
-                <ion-icon name="checkmark-outline" class="hidden"></ion-icon>
+                    <ion-icon name="checkmark-outline" class="hidden" style="float:right"></ion-icon>
+                </p>
             </li>
     `
 
-    for (user in users) {
+    for (let i = 0; i < users.length; i++) {
         contactList.innerHTML += `
             <li class="user" onclick="selectUser(this)">
-                <div>
+                <p>
                     <ion-icon name="person-circle"></ion-icon>
-                    <span>${user.name}</span>
-                </div>
-                <ion-icon name="checkmark-outline" class="hidden"></ion-icon>
+                    <span>${users[i].name}</span>
+                    <ion-icon name="checkmark-outline" class="hidden" style="float:right"></ion-icon>
+                </p>
             </li>
         `
     }
 }
 
-function selectUser(elem) {
-    const children = elem.childNodes;
-    const check = children[3];
+function selectUser(userLI) {
+    const usersList = userLI.parentNode.children;
+    const pUser = userLI.children[0];
+    const ionIconCheck = pUser.lastElementChild;
 
-    const parent = elem.parentNode;
-    const list = parent.children;
-
-    for (let i = 0; i < list.length; i++) {
-        const checkmark = list[i].lastElementChild;
-        if (!checkmark.classList.contains('hidden')) {
-            checkmark.classList.add('hidden');
+    for (let i = 0; i < usersList.length; i++) {
+        const auxCheck = usersList[i].children[0].lastElementChild;
+        if (!auxCheck.classList.contains('hidden')) {
+            auxCheck.classList.add('hidden');
         }
     }
-    check.classList.remove('hidden');
+    ionIconCheck.classList.remove('hidden');
 
-    contactSelected = elem.children[0].children[1].innerHTML;
+    contactSelected = userLI.children[0].children[1].innerText;
     console.log(contactSelected);
+}
+
+function selectType(typeLI) {
+    const typesList = typeLI.parentNode.children;
+    const pType = typeLI.children[0]
+    const ionIconCheck = pType.lastElementChild;
+
+    for (let i = 0; i < typesList.length; i++) {
+        const auxCheck = typesList[i].children[0].lastElementChild;
+        if (!auxCheck.classList.contains('hidden')) {
+            auxCheck.classList.add('hidden');
+        }
+    }
+    ionIconCheck.classList.remove('hidden');
+
+    messageTypeSelected = typeLI.children[0].children[1].innerText;
+    console.log(messageTypeSelected);
 }
 
 
@@ -183,9 +196,10 @@ const nome = prompt("Insira seu nome:", `userID${Math.floor(1 + Math.random() * 
 
 connectRoom(nome);
 getMessages();
+isOnline(nome)
+searchParticipants();
 //sendMessage(nome, 'todos', 'Minha primeira mensagem', 'message');
-//const onlineInterval = setInterval(isOnline, 5000, nome);
-//const refreshFeedInterval = setInterval(getMessages, 3000);
-searchParticipants()
-const refreshUsers = setInterval(searchParticipants, 10000)
+const onlineInterval = setInterval(isOnline, 5000, nome);
+const refreshFeedInterval = setInterval(getMessages, 30000);
+const refreshUsers = setInterval(searchParticipants, 100000)
 

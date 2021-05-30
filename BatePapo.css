@@ -82,6 +82,10 @@ ion-icon.lock {
     box-sizing: border-box;
 }
 
+    .sidebar p {
+        margin-bottom: 10px;
+    }
+
 .dark-background{
     position: fixed;
     left: 0;
